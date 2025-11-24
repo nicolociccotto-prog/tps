@@ -1,0 +1,27 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 30px;
+}
+
+.container {
+  display: flex;
+  gap: 40px; /* spazio tra input e output */
+  align-items: flex-start;
+}
+
+.input-area div {
+  margin-top: 10px;
+}
+
+#risultato {
+  padding: 15px;
+  border: 1px solid #333;
+  border-radius: 8px;
+  background-color: #f0f0f0;
+  display: none; /* nascosto finché non si clicca */
+  min-width: 200px;
+}
+
+#risultato div {
+  margin: 5px 0;
+}
