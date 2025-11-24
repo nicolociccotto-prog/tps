@@ -1,0 +1,33 @@
+// creo un vettore (array), praticamente una lista dove posso salvare piu valori
+var dati = [];
+
+// metto dentro il vettore i dati dell'anagrafica
+dati[0] = prompt("Inserisci il nome:");
+dati[1] = prompt("Inserisci il cognome:");
+dati[2] = prompt("Inserisci l'indirizzo:");
+dati[3] = prompt("Inserisci la citta:"); 
+dati[4] = prompt("Inserisci il CAP:");
+dati[5] = prompt("Inserisci l'eta:"); 
+
+// anno di nascita lo tengo fuori xke lo uso x i controlli
+var annoNascita = prompt("Inserisci anno di nascita (tipo 1999):");
+
+// converto in numero sennò a volte JS pensa che è una stringa
+annoNascita = Number(annoNascita);
+
+var generazione = ""; // risultato finale
+
+// controllo a che generazione appartiene la persona
+if (annoNascita >= 2013) {
+    generazione = "Generazione Alpha";
+} else if (annoNascita >= 1997) {
+    generazione = "Generazione Z";
+} else if (annoNascita >= 1981) {
+    generazione = "Millennials";
+} else if (annoNascita >= 1965) {
+    generazione = "Generazione X";
+} else if (annoNascita >= 1946) {
+    generazione = "Baby Boomers";
+} else if (annoNascita >= 1928) {
+    generazione = "Generazione Silenziosa";
+} else if (annoNascita >= 190
