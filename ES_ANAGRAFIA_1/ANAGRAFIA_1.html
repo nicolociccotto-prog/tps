@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <title>Registrazione dati</title>
+  <link rel="stylesheet" href="Stile.css">
+</head>
+<body>
+  <h2>Inserisci i tuoi dati</h2>
+
+  <div class="container">
+    <div class="input-area">
+      <div>
+        <label>
+          Nome: 
+          <input type="text" id="campoNome">
+        </label>
+      </div>
+
+      <div>
+        <label>
+          Cognome: 
+          <input type="text" id="campoCognome">
+        </label>
+      </div>
+
+      <div>
+        <label>
+          Indirizzo: 
+          <input type="text" id="campoIndirizzo">
+        </label>
+      </div>
+
+      <div>
+        <button onclick="mostraDati()">Invia</button>
+      </div>
+    </div>
+
+    <div id="risultato"></div>
+  </div>
+
+  <script>
+    function mostraDati() {
+      const nomeUtente = document.getElementById("campoNome").value.trim();
+      const cognomeUtente = document.getElementById("campoCognome").value.trim();
+      const indirizzoUtente = document.getElementById("campoIndirizzo").value.trim();
+
+      if (nomeUtente !== "") {
+        const areaOutput = document.getElementById("risultato");
+        areaOutput.style.display = "block";
+        areaOutput.innerHTML = `
+          <div>Nome: ${nomeUtente}</div>
+          <div>Cognome: ${cognomeUtente}</div>
+          <div>Indirizzo: ${indirizzoUtente}</div>
+        `;
+      } else {
+        alert("Compila almeno il campo Nome per continuare!");
+      }
+    }
+  </script>
+</body>
+</html>
