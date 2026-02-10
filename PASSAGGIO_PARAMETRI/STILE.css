@@ -46,3 +46,11 @@ button {
   border: none;
   border-radius: 4px;
   cursor:
+
+.testo-parametri {
+  color: #FFFFFF;
+}
+
+.testo-parametri strong {
+  color: #FFFFFF;
+}
