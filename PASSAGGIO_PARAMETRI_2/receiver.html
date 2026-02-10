@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Receiver</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <h2>Pagina Receiver</h2>
+
+    <p id="risultato"></p>
+
+    <button onclick="torna()">Torna al Sender</button>
+</div>
+
+<script>
+    // Prendiamo l'URL
+    var url = window.location.search;
+
+    // Togliamo il ?
+    url = url.substring(1);
+
+    // Separiamo i parametri
+    var parametri = url.split("&");
+
+    var p1 = parametri[0].split("=")[1];
+    var p2 = parametri[1].split("=")[1];
+
+    document.getElementById("risultato").innerHTML =
+        "Parametro 1: " + p1 + "<br>" +
+        "Parametro 2: " + p2;
+
+    function torna() {
+        window.location.href = "sender.html";
+    }
+</script>
+
+</body>
+</html>
