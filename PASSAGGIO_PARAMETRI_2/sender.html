@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Sender</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <h2>Pagina Sender</h2>
+
+    <p>Parametro 1</p>
+    <input type="text" id="param1">
+
+    <p>Parametro 2</p>
+    <input type="text" id="param2">
+
+    <button onclick="invia()">Invia</button>
+</div>
+
+<script>
+    function invia() {
+        var p1 = document.getElementById("param1").value;
+        var p2 = document.getElementById("param2").value;
+
+        // Passiamo i dati nell'URL
+        window.location.href = "receiver.html?p1=" + p1 + "&p2=" + p2;
+    }
+</script>
+
+</body>
+</html>
