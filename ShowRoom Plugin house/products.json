@@ -1,1 +1,72 @@
-
+[
+  {
+    "id": 1,
+    "name": "Zenology",
+    "price": 229,
+    "category": "Synth",
+    "image": "images/prod1.jpg"
+  },
+  {
+    "id": 2,
+    "name": "Serum",
+    "price": 180,
+    "category": "Synth",
+    "image": "images/prod2.jpg"
+  },
+  {
+    "id": 3,
+    "name": "Xpand!2",
+    "price": 30,
+    "category": "Synth",
+    "image": "images/prod3.jpg"
+  },
+  {
+    "id": 4,
+    "name": "Analog Lab V",
+    "price": 199,
+    "category": "Synth",
+    "image": "images/prod4.jpg"
+  },
+  {
+    "id": 5,
+    "name": "Nexus",
+    "price": 250,
+    "category": "Synth",
+    "image": "images/prod5.jpg"
+  },
+  {
+    "id": 6,
+    "name": "FabFilter Pro Q4",
+    "price": 180,
+    "category": "EQ",
+    "image": "images/prod6.jpg"
+  },
+  {
+    "id": 7,
+    "name": "Portal",
+    "price": 129,
+    "category": "FX",
+    "image": "images/prod7.jpg"
+  },
+  {
+    "id": 8,
+    "name": "Thermal",
+    "price": 99,
+    "category": "FX",
+    "image": "images/prod8.jpg"
+  },
+  {
+    "id": 9,
+    "name": "Evermotion",
+    "price": 79,
+    "category": "Instrument",
+    "image": "images/prod9.jpg"
+  },
+  {
+    "id": 10,
+    "name": "Triton",
+    "price": 249,
+    "category": "Synth",
+    "image": "images/prod10.jpg"
+  }
+]
