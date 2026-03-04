@@ -24,6 +24,7 @@
           <li><a href="#home">Home</a></li>
           <li><a href="#catalogo">Catalogo</a></li>
           <li><a href="#preferiti">Preferiti</a></li>
+          <li><button id="dark-toggle" aria-label="Modalità Dark">🌓</button></li>
         </ul>
       </nav>
     </div>
@@ -44,28 +45,20 @@
     <!-- CATALOGO SECTION -->
     <section id="catalogo" class="catalogo">
       <div class="container">
-
         <h2>Catalogo Plugin</h2>
 
-        <!-- FILTRI -->
         <div class="filters">
 
           <!-- BARRA DI RICERCA -->
           <div class="search-box">
             <label for="search">Cerca plugin</label>
-            <input 
-              type="text" 
-              id="search" 
-              name="search" 
-              placeholder="Es. Serum"
-              aria-label="Cerca plugin per nome"
-            >
+            <input type="text" id="search" placeholder="Es. Serum" aria-label="Cerca plugin per nome">
           </div>
 
           <!-- ORDINAMENTO -->
           <div class="sort-box">
             <label for="sort">Ordina per</label>
-            <select id="sort" name="sort">
+            <select id="sort">
               <option value="default">Default</option>
               <option value="price-asc">Prezzo crescente</option>
               <option value="price-desc">Prezzo decrescente</option>
@@ -96,10 +89,11 @@
   </main>
 
   <!-- FOOTER -->
-  <footer>
-    <div class="container">
+  <footer class="footer-dark">
+    <div class="container footer-container">
       <p>© 2026 Plugin House Showroom</p>
-      <p>Progetto scolastico front-end</p>
+      <p>Telefono: +39 02 1234567 | Email: info@pluginhouse.it</p>
+      <p><a href="#">Termini e condizioni</a> | <a href="#">Privacy</a></p>
     </div>
   </footer>
 
