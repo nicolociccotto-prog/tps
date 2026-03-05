@@ -1,21 +1,19 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // ====== DOM ======
   const productsGrid = document.getElementById("products-grid");
   const favoritesGrid = document.getElementById("favorites-grid");
   const searchInput = document.getElementById("search");
   const sortSelect = document.getElementById("sort");
   const darkToggle = document.getElementById("dark-toggle");
 
-  // Controllo base (se manca qualcosa, non esplode tutto)
   if (!productsGrid || !favoritesGrid || !searchInput || !sortSelect) {
     console.error("Manca qualche id in HTML: products-grid / favorites-grid / search / sort");
     return;
   }
 
-  // ====== DARK MODE (persistente) ======
-  const darkSaved = localStorage.getItem("darkMode");
-  if (darkSaved === "true") document.body.classList.add("dark");
-
+  // ---- Dark mode persistente ----
+  if (localStorage.getItem("darkMode") === "true") {
+    document.body.classList.add("dark");
+  }
   if (darkToggle) {
     darkToggle.addEventListener("click", () => {
       document.body.classList.toggle("dark");
@@ -23,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ====== FAVORITES (persistenti) ======
+  // ---- Favoriti (salvo solo gli ID) ----
   const FAVORITES_KEY = "favorites";
   let favoritesIds = [];
   try {
@@ -33,15 +31,13 @@ document.addEventListener("DOMContentLoaded", () => {
     favoritesIds = [];
   }
 
-  function isFavorite(id) {
-    return favoritesIds.includes(id);
-  }
+  const isFavorite = (id) => favoritesIds.includes(id);
 
-  function saveFavorites() {
+  const saveFavorites = () => {
     localStorage.setItem(FAVORITES_KEY, JSON.stringify(favoritesIds));
-  }
+  };
 
-  function toggleFavorite(id) {
+  const toggleFavorite = (id) => {
     if (isFavorite(id)) {
       favoritesIds = favoritesIds.filter(x => x !== id);
     } else {
@@ -49,9 +45,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     saveFavorites();
     renderAll();
-  }
+  };
 
-  // ====== DATA ======
+  // ---- Caricamento prodotti ----
   let products = [];
 
   async function loadProducts() {
@@ -60,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!res.ok) throw new Error(`Fetch products.json fallito: ${res.status}`);
       const data = await res.json();
       if (!Array.isArray(data)) throw new Error("products.json non è un array");
-      // Normalizziamo
+
       products = data
         .filter(p => p && typeof p === "object")
         .map(p => ({
@@ -72,6 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
           image: String(p.image ?? "")
         }))
         .filter(p => Number.isFinite(p.id) && p.name.length > 0);
+
       renderAll();
     } catch (err) {
       console.error(err);
@@ -79,12 +76,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // ====== FILTER + SORT ======
+  // ---- filtro + sort ----
   function getFilteredSortedProducts() {
     const q = searchInput.value.trim().toLowerCase();
     let list = products;
 
-    // filtro ricerca su name + brand + category
     if (q.length > 0) {
       list = list.filter(p => {
         const hay = `${p.name} ${p.brand} ${p.category}`.toLowerCase();
@@ -92,7 +88,6 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    // ordinamento
     const sort = sortSelect.value;
     const copy = [...list];
 
@@ -103,7 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return copy;
   }
 
-  // ====== RENDER (sicuro: textContent, createElement) ======
+  // ---- card ----
   function createProductCard(p) {
     const card = document.createElement("article");
     card.className = "product-card";
@@ -121,11 +116,26 @@ document.addEventListener("DOMContentLoaded", () => {
     const price = document.createElement("p");
     price.textContent = `€ ${p.price}`;
 
+    // bottone dettagli (per ora non fa nulla, ma non lo perdi)
+    const detailsBtn = document.createElement("button");
+    detailsBtn.type = "button";
+    detailsBtn.textContent = "Dettagli";
+    detailsBtn.style.borderRadius = "999px";
+    detailsBtn.style.border = "1px solid var(--accent-color)";
+    detailsBtn.style.background = "transparent";
+    detailsBtn.style.color = "var(--accent-color)";
+    detailsBtn.style.padding = "8px 16px";
+    detailsBtn.style.cursor = "pointer";
+    detailsBtn.style.transition = "var(--transition)";
+
+    // cuore in basso a destra
     const favBtn = document.createElement("button");
     favBtn.type = "button";
-    favBtn.dataset.id = String(p.id);
+    favBtn.className = "fav-btn";
     favBtn.setAttribute("aria-label", isFavorite(p.id) ? "Rimuovi dai preferiti" : "Aggiungi ai preferiti");
-    favBtn.textContent = isFavorite(p.id) ? "❤️ Nei preferiti" : "🤍 Aggiungi ai preferiti";
+    favBtn.textContent = "♥";
+
+    if (isFavorite(p.id)) favBtn.classList.add("is-fav");
 
     favBtn.addEventListener("click", () => toggleFavorite(p.id));
 
@@ -133,6 +143,7 @@ document.addEventListener("DOMContentLoaded", () => {
     card.appendChild(title);
     card.appendChild(brand);
     card.appendChild(price);
+    card.appendChild(detailsBtn);
     card.appendChild(favBtn);
 
     return card;
@@ -163,15 +174,12 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderAll() {
-    const list = getFilteredSortedProducts();
-    renderProductsGrid(list);
+    renderProductsGrid(getFilteredSortedProducts());
     renderFavoritesGrid();
   }
 
-  // ====== EVENTS ======
   searchInput.addEventListener("input", renderAll);
   sortSelect.addEventListener("change", renderAll);
 
-  // ====== START ======
   loadProducts();
 });
