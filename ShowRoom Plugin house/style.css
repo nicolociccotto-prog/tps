@@ -1,11 +1,13 @@
 :root{
+  /* Palette controllata (3 colori) */
+  --accent: #7c3aed;     /* viola */
+  --accent-2: #22d3ee;   /* cyan */
+  --accent-3: #ffffff;   /* highlight neutro (non “arancione”) */
+
   --bg: #0b0c10;
   --text: #e9ecf1;
   --muted: rgba(233,236,241,0.72);
   --border: rgba(255,255,255,0.14);
-  --accent: #7c3aed;
-  --accent-2: #22d3ee;
-  --accent-3: #f97316;
 
   --surface: rgba(255,255,255,0.06);
   --surface-2: rgba(255,255,255,0.10);
@@ -19,7 +21,7 @@
   --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-/* LIGHT MODE come “crazy light” */
+/* LIGHT MODE: pulito, non arcobaleno */
 body:not(.dark){
   --bg: #f7f7fb;
   --text: #111318;
@@ -30,9 +32,9 @@ body:not(.dark){
   --surface-2: rgba(255,255,255,0.85);
   --shadow: 0 18px 55px rgba(17,19,24,0.10);
 
-  --accent: #0071e3;
-  --accent-2: #22c55e;
-  --accent-3: #fb7185;
+  --accent: #0071e3;   /* blu Apple */
+  --accent-2: #7c3aed; /* viola */
+  --accent-3: #111318; /* testo */
 }
 
 /* DARK MODE */
@@ -45,9 +47,9 @@ body.dark{
   --surface: rgba(255,255,255,0.06);
   --surface-2: rgba(255,255,255,0.10);
 
-  --accent: #7c3aed;
-  --accent-2: #22d3ee;
-  --accent-3: #f97316;
+  --accent: #7c3aed;   /* viola */
+  --accent-2: #22d3ee; /* cyan */
+  --accent-3: #f4f7ff; /* highlight neutro */
 }
 
 *{ box-sizing:border-box; margin:0; padding:0; }
@@ -61,7 +63,7 @@ body{
   overflow-x: hidden;
 }
 
-/* background “liquid” */
+/* background “liquid” (solo 2 accenti, niente arcobaleno) */
 body::before,
 body::after{
   content:"";
@@ -69,24 +71,21 @@ body::after{
   inset: -20%;
   z-index: -2;
   background:
-    radial-gradient(600px 420px at 18% 22%, color-mix(in oklab, var(--accent) 60%, transparent) 0%, transparent 60%),
-    radial-gradient(520px 420px at 78% 18%, color-mix(in oklab, var(--accent-2) 55%, transparent) 0%, transparent 62%),
-    radial-gradient(620px 520px at 70% 76%, color-mix(in oklab, var(--accent-3) 55%, transparent) 0%, transparent 65%);
-  filter: blur(18px) saturate(120%);
+    radial-gradient(600px 420px at 18% 22%, color-mix(in oklab, var(--accent) 55%, transparent) 0%, transparent 62%),
+    radial-gradient(620px 520px at 72% 72%, color-mix(in oklab, var(--accent-2) 50%, transparent) 0%, transparent 65%);
+  filter: blur(22px) saturate(115%);
   opacity: 0.90;
-  transform: translate3d(0,0,0);
 }
 
 body::after{
   z-index: -1;
-  opacity: 0.55;
+  opacity: 0.45;
   background:
-    radial-gradient(520px 380px at 22% 70%, color-mix(in oklab, var(--accent-2) 45%, transparent) 0%, transparent 68%),
-    radial-gradient(520px 380px at 80% 60%, color-mix(in oklab, var(--accent) 40%, transparent) 0%, transparent 70%);
+    radial-gradient(520px 380px at 78% 18%, color-mix(in oklab, var(--accent-2) 35%, transparent) 0%, transparent 70%),
+    radial-gradient(520px 380px at 24% 78%, color-mix(in oklab, var(--accent) 30%, transparent) 0%, transparent 72%);
   filter: blur(30px);
 }
 
-/* riduci motion se richiesto */
 @media (prefers-reduced-motion: reduce){
   html{ scroll-behavior:auto; }
   *{ transition:none !important; }
@@ -117,16 +116,18 @@ header{
   gap: 14px;
 }
 
+/* LOGO: senza ellisse, semplice */
 .logo{
   font-size: 18px;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: -0.02em;
-  padding: 8px 12px;
-  border-radius: 999px;
-  background: color-mix(in oklab, var(--surface) 80%, transparent);
-  border: 1px solid var(--border);
+  padding: 0;              /* niente pill */
+  border-radius: 0;        /* niente pill */
+  background: transparent; /* niente pill */
+  border: none;            /* niente pill */
 }
 
+/* nav */
 nav{ position: relative; }
 
 .nav-links{
@@ -225,7 +226,7 @@ nav{ position: relative; }
   font-size: 14px;
   border: 1px solid rgba(255,255,255,0.18);
   background:
-    linear-gradient(135deg, color-mix(in oklab, var(--accent) 80%, #000) 0%, color-mix(in oklab, var(--accent-2) 70%, #000) 100%);
+    linear-gradient(135deg, color-mix(in oklab, var(--accent) 82%, #000) 0%, color-mix(in oklab, var(--accent-2) 72%, #000) 100%);
   box-shadow: 0 14px 30px rgba(0,0,0,0.20);
   transition: var(--transition);
 }
@@ -235,7 +236,7 @@ nav{ position: relative; }
   box-shadow: 0 18px 38px rgba(0,0,0,0.24);
 }
 
-/* sezione catalogo spacing */
+/* titoli sezione */
 .catalogo h2,
 .preferiti h2{
   font-size: 20px;
@@ -243,7 +244,7 @@ nav{ position: relative; }
   margin-top: 10px;
 }
 
-/* filtri glass */
+/* filtri */
 .filters{
   display:flex;
   flex-direction: column;
@@ -287,7 +288,7 @@ nav{ position: relative; }
   margin-bottom: 72px;
 }
 
-/* card super clean + experimental */
+/* card */
 .product-card{
   position: relative;
   text-align: left;
@@ -306,8 +307,7 @@ nav{ position: relative; }
   inset:-2px;
   background: linear-gradient(135deg,
     color-mix(in oklab, var(--accent) 55%, transparent),
-    color-mix(in oklab, var(--accent-2) 55%, transparent),
-    color-mix(in oklab, var(--accent-3) 45%, transparent));
+    color-mix(in oklab, var(--accent-2) 55%, transparent));
   opacity: 0;
   filter: blur(14px);
   transition: var(--transition);
@@ -318,7 +318,7 @@ nav{ position: relative; }
 }
 
 .product-card:hover::before{
-  opacity: 0.60;
+  opacity: 0.55;
 }
 
 .product-card img{
@@ -390,8 +390,8 @@ nav{ position: relative; }
   color: #fff;
   border-color: rgba(255,255,255,0.22);
   background: linear-gradient(135deg,
-    color-mix(in oklab, var(--accent) 80%, #000) 0%,
-    color-mix(in oklab, var(--accent-2) 70%, #000) 100%);
+    color-mix(in oklab, var(--accent) 82%, #000) 0%,
+    color-mix(in oklab, var(--accent-2) 72%, #000) 100%);
 }
 
 /* footer */
