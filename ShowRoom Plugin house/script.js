@@ -1,51 +1,177 @@
-// =======================
-// ARRAY PRODOTTI
-// =======================
+document.addEventListener("DOMContentLoaded", () => {
+  // ====== DOM ======
+  const productsGrid = document.getElementById("products-grid");
+  const favoritesGrid = document.getElementById("favorites-grid");
+  const searchInput = document.getElementById("search");
+  const sortSelect = document.getElementById("sort");
+  const darkToggle = document.getElementById("dark-toggle");
 
-const products = [
-  { id: 1, name: "Zenology", brand: "Arturia", price: 229, image: "images/prod1.jpg" },
-  { id: 2, name: "Serum", brand: "Xfer Records", price: 180, image: "images/prod2.jpg" },
-  { id: 3, name: "Xpand!2", brand: "AIR Music", price: 30, image: "images/prod3.jpg" },
-  { id: 4, name: "Analog Lab V", brand: "Arturia", price: 199, image: "images/prod4.jpg" },
-  { id: 5, name: "Nexus", brand: "reFX", price: 250, image: "images/prod5.jpg" },
-  { id: 6, name: "FabFilter Pro Q4", brand: "FabFilter", price: 180, image: "images/prod6.jpg" },
-  { id: 7, name: "Portal", brand: "Output", price: 129, image: "images/prod7.jpg" },
-  { id: 8, name: "Thermal", brand: "Output", price: 99, image: "images/prod8.jpg" },
-  { id: 9, name: "Evermotion", brand: "Sample Logic", price: 79, image: "images/prod9.jpg" },
-  { id: 10, name: "Triton", brand: "Korg", price: 249, image: "images/prod10.jpg" }
-]
+  // Controllo base (se manca qualcosa, non esplode tutto)
+  if (!productsGrid || !favoritesGrid || !searchInput || !sortSelect) {
+    console.error("Manca qualche id in HTML: products-grid / favorites-grid / search / sort");
+    return;
+  }
 
-// =======================
-// SELEZIONE GRIGLIA
-// =======================
+  // ====== DARK MODE (persistente) ======
+  const darkSaved = localStorage.getItem("darkMode");
+  if (darkSaved === "true") document.body.classList.add("dark");
 
-const productsGrid = document.getElementById("products-grid")
+  if (darkToggle) {
+    darkToggle.addEventListener("click", () => {
+      document.body.classList.toggle("dark");
+      localStorage.setItem("darkMode", document.body.classList.contains("dark"));
+    });
+  }
 
-// =======================
-// FUNZIONE CREA CARD
-// =======================
+  // ====== FAVORITES (persistenti) ======
+  const FAVORITES_KEY = "favorites";
+  let favoritesIds = [];
+  try {
+    const saved = JSON.parse(localStorage.getItem(FAVORITES_KEY));
+    favoritesIds = Array.isArray(saved) ? saved : [];
+  } catch {
+    favoritesIds = [];
+  }
 
-function renderProducts(productArray) {
-  productsGrid.innerHTML = ""
+  function isFavorite(id) {
+    return favoritesIds.includes(id);
+  }
 
-  productArray.forEach(product => {
-    const card = document.createElement("div")
-    card.classList.add("product-card")
+  function saveFavorites() {
+    localStorage.setItem(FAVORITES_KEY, JSON.stringify(favoritesIds));
+  }
 
-    card.innerHTML = `
-      <img src="${product.image}" alt="${product.name}">
-      <h3>${product.name}</h3>
-      <p>${product.brand}</p>
-      <p>€ ${product.price}</p>
-      <button>Dettagli</button>
-    `
+  function toggleFavorite(id) {
+    if (isFavorite(id)) {
+      favoritesIds = favoritesIds.filter(x => x !== id);
+    } else {
+      favoritesIds.push(id);
+    }
+    saveFavorites();
+    renderAll();
+  }
 
-    productsGrid.appendChild(card)
-  })
-}
+  // ====== DATA ======
+  let products = [];
 
-// =======================
-// AVVIO
-// =======================
+  async function loadProducts() {
+    try {
+      const res = await fetch("products.json", { cache: "no-store" });
+      if (!res.ok) throw new Error(`Fetch products.json fallito: ${res.status}`);
+      const data = await res.json();
+      if (!Array.isArray(data)) throw new Error("products.json non è un array");
+      // Normalizziamo
+      products = data
+        .filter(p => p && typeof p === "object")
+        .map(p => ({
+          id: Number(p.id),
+          name: String(p.name ?? ""),
+          brand: String(p.brand ?? ""),
+          category: String(p.category ?? ""),
+          price: Number(p.price ?? 0),
+          image: String(p.image ?? "")
+        }))
+        .filter(p => Number.isFinite(p.id) && p.name.length > 0);
+      renderAll();
+    } catch (err) {
+      console.error(err);
+      productsGrid.textContent = "Errore nel caricamento dei prodotti";
+    }
+  }
 
-renderProducts(products)
+  // ====== FILTER + SORT ======
+  function getFilteredSortedProducts() {
+    const q = searchInput.value.trim().toLowerCase();
+    let list = products;
+
+    // filtro ricerca su name + brand + category
+    if (q.length > 0) {
+      list = list.filter(p => {
+        const hay = `${p.name} ${p.brand} ${p.category}`.toLowerCase();
+        return hay.includes(q);
+      });
+    }
+
+    // ordinamento
+    const sort = sortSelect.value;
+    const copy = [...list];
+
+    if (sort === "price-asc") copy.sort((a, b) => a.price - b.price);
+    if (sort === "price-desc") copy.sort((a, b) => b.price - a.price);
+    if (sort === "name") copy.sort((a, b) => a.name.localeCompare(b.name));
+
+    return copy;
+  }
+
+  // ====== RENDER (sicuro: textContent, createElement) ======
+  function createProductCard(p) {
+    const card = document.createElement("article");
+    card.className = "product-card";
+
+    const img = document.createElement("img");
+    img.src = p.image;
+    img.alt = p.name;
+
+    const title = document.createElement("h3");
+    title.textContent = p.name;
+
+    const brand = document.createElement("p");
+    brand.textContent = p.brand;
+
+    const price = document.createElement("p");
+    price.textContent = `€ ${p.price}`;
+
+    const favBtn = document.createElement("button");
+    favBtn.type = "button";
+    favBtn.dataset.id = String(p.id);
+    favBtn.setAttribute("aria-label", isFavorite(p.id) ? "Rimuovi dai preferiti" : "Aggiungi ai preferiti");
+    favBtn.textContent = isFavorite(p.id) ? "❤️ Nei preferiti" : "🤍 Aggiungi ai preferiti";
+
+    favBtn.addEventListener("click", () => toggleFavorite(p.id));
+
+    card.appendChild(img);
+    card.appendChild(title);
+    card.appendChild(brand);
+    card.appendChild(price);
+    card.appendChild(favBtn);
+
+    return card;
+  }
+
+  function renderProductsGrid(list) {
+    productsGrid.innerHTML = "";
+    if (list.length === 0) {
+      const msg = document.createElement("p");
+      msg.textContent = "Nessun risultato";
+      productsGrid.appendChild(msg);
+      return;
+    }
+    list.forEach(p => productsGrid.appendChild(createProductCard(p)));
+  }
+
+  function renderFavoritesGrid() {
+    favoritesGrid.innerHTML = "";
+    const favProducts = products.filter(p => isFavorite(p.id));
+
+    if (favProducts.length === 0) {
+      const msg = document.createElement("p");
+      msg.textContent = "Nessun plugin nei preferiti";
+      favoritesGrid.appendChild(msg);
+      return;
+    }
+    favProducts.forEach(p => favoritesGrid.appendChild(createProductCard(p)));
+  }
+
+  function renderAll() {
+    const list = getFilteredSortedProducts();
+    renderProductsGrid(list);
+    renderFavoritesGrid();
+  }
+
+  // ====== EVENTS ======
+  searchInput.addEventListener("input", renderAll);
+  sortSelect.addEventListener("change", renderAll);
+
+  // ====== START ======
+  loadProducts();
+});
