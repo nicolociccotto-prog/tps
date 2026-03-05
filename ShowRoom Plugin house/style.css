@@ -118,13 +118,10 @@ header{
 
 /* LOGO: senza ellisse, semplice */
 .logo{
-  font-size: 18px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  padding: 0;              /* niente pill */
-  border-radius: 0;        /* niente pill */
-  background: transparent; /* niente pill */
-  border: none;            /* niente pill */
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--text);
 }
 
 /* nav */
