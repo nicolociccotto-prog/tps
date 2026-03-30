@@ -2,6 +2,8 @@
 function leggiFile() {
     let input = document.getElementById("fileCSV");
     let file = input.files[0];
+    if (file == null) {
+    return;
     }
 
     let reader = new FileReader();
