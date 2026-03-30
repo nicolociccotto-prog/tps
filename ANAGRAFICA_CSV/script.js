@@ -1,4 +1,3 @@
-
 function leggiFile() {
     let input = document.getElementById("fileCSV");
     let file = input.files[0];
@@ -11,9 +10,12 @@ function leggiFile() {
 
     reader.onload = function(e) {
         let testo = e.target.result;
-        let righe = testo.split("\n");
-        let intestazioni = righe[0].split(",");
 
+        while (testo.indexOf("\r") != -1) {
+            testo = testo.replace("\r", "");
+        }
+
+        let righe = testo.split("\n");
         let dati = new Array();
         let i = 1;
 
@@ -22,11 +24,11 @@ function leggiFile() {
                 let campi = righe[i].split(",");
                 let persona = new Object();
 
-                let j = 0;
-                while (j < intestazioni.length) {
-                    persona[intestazioni[j]] = campi[j];
-                    j = j + 1;
-                }
+                persona.nome = campi[0];
+                persona.cognome = campi[1];
+                persona.email = campi[2];
+                persona.telefono = campi[3];
+                persona.citta = campi[4];
 
                 dati.push(persona);
             }
