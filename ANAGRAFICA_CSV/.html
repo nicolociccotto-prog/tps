@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Anagrafica da CSV</title>
+    <style>
+        body {
+            font-family: Arial;
+            background-color: #f0f0f0;
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        #contenitore {
+            width: 100%;
+            text-align: center;
+        }
+
+        .blocco {
+            display: inline-block;
+            vertical-align: top;
+            width: 250px;
+            margin: 10px;
+            padding: 15px;
+            background-color: white;
+            border: 1px solid #999;
+            border-radius: 10px;
+            box-shadow: 2px 2px 5px #aaa;
+            text-align: left;
+        }
+
+        .titolo {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Anagrafica da file CSV</h1>
+
+    <input type="file" id="fileCSV" onchange="leggiFile()">
+
+    <br><br>
+
+    <div id="contenitore"></div>
+
+    <script>
+        function leggiFile() {
+            let input = document.getElementById("fileCSV");
+            let file = input.files[0];
+
+            if (file == null) {
+                return;
+            }
+
+            let reader = new FileReader();
+
+            reader.onload = function(e) {
+                let testo = e.target.result;
+                let righe = testo.split("\n");
+                let intestazioni = righe[0].split(",");
+
+                let dati = new Array();
+                let i = 1;
+
+                while (i < righe.length) {
+                    if (righe[i] != "") {
+                        let campi = righe[i].split(",");
+                        let persona = new Object();
+
+                        let j = 0;
+                        while (j < intestazioni.length) {
+                            persona[intestazioni[j]] = campi[j];
+                            j = j + 1;
+                        }
+
+                        dati.push(persona);
+                    }
+
+                    i = i + 1;
+                }
+
+                document.getElementById("contenitore").innerHTML = "";
+                creaBlocchiRicorsivo(dati, 0);
+            };
+
+            reader.readAsText(file);
+        }
+
+        function creaBlocchiRicorsivo(dati, indice) {
+            if (indice >= dati.length) {
+                return;
+            }
+
+            let contenitore = document.getElementById("contenitore");
+            let persona = dati[indice];
+
+            let blocco = document.createElement("div");
+            blocco.className = "blocco";
+
+            let testoHTML = "";
+
+            testoHTML = testoHTML + "<div class='titolo'>";
+            testoHTML = testoHTML + persona.nome + " " + persona.cognome;
+            testoHTML = testoHTML + "</div>";
+
+            testoHTML = testoHTML + "<div><b>Email:</b> " + persona.email + "</div>";
+            testoHTML = testoHTML + "<div><b>Telefono:</b> " + persona.telefono + "</div>";
+            testoHTML = testoHTML + "<div><b>Citta:</b> " + persona.citta + "</div>";
+
+            blocco.innerHTML = testoHTML;
+
+            contenitore.appendChild(blocco);
+
+            creaBlocchiRicorsivo(dati, indice + 1);
+        }
+    </script>
+
+</body>
+</html>
