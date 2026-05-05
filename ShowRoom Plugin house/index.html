@@ -52,7 +52,12 @@
           <!-- BARRA DI RICERCA -->
           <div class="search-box">
             <label for="search">Cerca plugin</label>
-            <input type="text" id="search" placeholder="Es. Serum" aria-label="Cerca plugin per nome">
+            <input
+              type="text"
+              id="search"
+              placeholder="Es. Serum"
+              aria-label="Cerca plugin per nome"
+            >
           </div>
 
           <!-- ORDINAMENTO -->
@@ -93,10 +98,43 @@
     <div class="container footer-container">
       <p>© 2026 Plugin House Showroom</p>
       <p>Telefono: +39 02 1234567 | Email: info@pluginhouse.it</p>
-      <p><a href="#">Termini e condizioni</a> | <a href="#">Privacy</a></p>
+      <p>
+        <a href="#">Termini e condizioni</a> |
+        <a href="#">Privacy</a>
+      </p>
     </div>
   </footer>
 
+  <!-- MODALE DETTAGLI -->
+  <div id="plugin-modal" class="modal hidden" aria-hidden="true">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+
+      <!-- CHIUSURA -->
+      <button id="close-modal" class="close-modal" aria-label="Chiudi finestra">
+        ✕
+      </button>
+
+      <!-- IMMAGINE -->
+      <img
+        id="modal-image"
+        class="modal-image"
+        src=""
+        alt=""
+      >
+
+      <!-- INFO -->
+      <div class="modal-info">
+        <h2 id="modal-title"></h2>
+        <p id="modal-brand"></p>
+        <p id="modal-price"></p>
+        <p id="modal-category"></p>
+        <p id="modal-description"></p>
+      </div>
+
+    </div>
+  </div>
+
   <script src="script.js"></script>
+
 </body>
 </html>
