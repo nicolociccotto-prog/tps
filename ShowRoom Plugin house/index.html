@@ -14,7 +14,6 @@
     <div class="container header-container">
       <h1 class="logo">Plugin House</h1>
 
-      <!-- NAVIGATION -->
       <nav aria-label="Navigazione principale">
         <button class="hamburger" aria-label="Apri menu">
           ☰
@@ -24,6 +23,7 @@
           <li><a href="#home">Home</a></li>
           <li><a href="#catalogo">Catalogo</a></li>
           <li><a href="#preferiti">Preferiti</a></li>
+          <li><a href="#carrello">Carrello</a></li>
           <li><button id="dark-toggle" aria-label="Modalità Dark">🌓</button></li>
         </ul>
       </nav>
@@ -33,7 +33,7 @@
   <!-- MAIN -->
   <main>
 
-    <!-- HOME SECTION -->
+    <!-- HOME -->
     <section id="home" class="hero">
       <div class="container">
         <h1>Scopri i migliori plugin per la tua produzione</h1>
@@ -42,14 +42,13 @@
       </div>
     </section>
 
-    <!-- CATALOGO SECTION -->
+    <!-- CATALOGO -->
     <section id="catalogo" class="catalogo">
       <div class="container">
         <h2>Catalogo Plugin</h2>
 
         <div class="filters">
 
-          <!-- BARRA DI RICERCA -->
           <div class="search-box">
             <label for="search">Cerca plugin</label>
             <input
@@ -60,7 +59,6 @@
             >
           </div>
 
-          <!-- ORDINAMENTO -->
           <div class="sort-box">
             <label for="sort">Ordina per</label>
             <select id="sort">
@@ -73,21 +71,63 @@
 
         </div>
 
-        <!-- GRIGLIA PRODOTTI -->
-        <div id="products-grid" class="products-grid">
-          <!-- Le card saranno generate dinamicamente da JS -->
-        </div>
+        <div id="products-grid" class="products-grid"></div>
 
       </div>
     </section>
 
-    <!-- SEZIONE PREFERITI -->
+    <!-- PREFERITI -->
     <section id="preferiti" class="preferiti">
       <div class="container">
         <h2>I tuoi Preferiti</h2>
-        <div id="favorites-grid" class="products-grid">
-          <!-- Preferiti generati via JS -->
+        <div id="favorites-grid" class="products-grid"></div>
+      </div>
+    </section>
+
+    <!-- CARRELLO -->
+    <section id="carrello" class="carrello">
+      <div class="container">
+        <h2>Il tuo Carrello</h2>
+
+        <div id="cart-grid" class="products-grid"></div>
+
+        <div class="cart-summary">
+          <p id="cart-total">Totale: € 0</p>
+
+          <div class="cart-buttons">
+            <button id="clear-cart" class="btn-secondary">
+              Svuota carrello
+            </button>
+
+            <button id="checkout-btn" class="btn-primary">
+              Completa acquisto
+            </button>
+          </div>
         </div>
+      </div>
+    </section>
+
+    <!-- TERMINI -->
+    <section id="termini" class="info-section">
+      <div class="container">
+        <h2>Termini e Condizioni</h2>
+        <p>
+          Plugin House è un progetto scolastico dimostrativo. Tutti i marchi,
+          i prodotti e i prezzi mostrati sono a scopo educativo e illustrativo.
+          Nessun acquisto reale viene effettuato tramite questa piattaforma.
+        </p>
+      </div>
+    </section>
+
+    <!-- PRIVACY -->
+    <section id="privacy" class="info-section">
+      <div class="container">
+        <h2>Privacy Policy</h2>
+        <p>
+          Questo sito utilizza esclusivamente localStorage per salvare preferiti,
+          tema e carrello sul dispositivo dell’utente. Nessun dato personale
+          viene raccolto o condiviso con terze parti.
+        </p>
       </div>
     </section>
 
@@ -99,8 +139,8 @@
       <p>© 2026 Plugin House Showroom</p>
       <p>Telefono: +39 02 1234567 | Email: info@pluginhouse.it</p>
       <p>
-        <a href="#">Termini e condizioni</a> |
-        <a href="#">Privacy</a>
+        <a href="#termini">Termini e condizioni</a> |
+        <a href="#privacy">Privacy</a>
       </p>
     </div>
   </footer>
@@ -109,20 +149,12 @@
   <div id="plugin-modal" class="modal hidden" aria-hidden="true">
     <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modal-title">
 
-      <!-- CHIUSURA -->
       <button id="close-modal" class="close-modal" aria-label="Chiudi finestra">
         ✕
       </button>
 
-      <!-- IMMAGINE -->
-      <img
-        id="modal-image"
-        class="modal-image"
-        src=""
-        alt=""
-      >
+      <img id="modal-image" class="modal-image" src="" alt="">
 
-      <!-- INFO -->
       <div class="modal-info">
         <h2 id="modal-title"></h2>
         <p id="modal-brand"></p>
