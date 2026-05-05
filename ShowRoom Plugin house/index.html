@@ -9,6 +9,9 @@
 
 <body>
 
+  <!-- TOAST -->
+  <div id="toast" class="toast hidden" aria-live="polite"></div>
+
   <!-- HEADER -->
   <header>
     <div class="container header-container">
@@ -24,6 +27,7 @@
           <li><a href="#catalogo">Catalogo</a></li>
           <li><a href="#preferiti">Preferiti</a></li>
           <li><a href="#carrello">Carrello</a></li>
+          <li><a href="#contatti">Contatti</a></li>
           <li><button id="dark-toggle" aria-label="Modalità Dark">🌓</button></li>
         </ul>
       </nav>
@@ -107,13 +111,45 @@
       </div>
     </section>
 
+    <!-- FORM CONTATTI -->
+    <section id="contatti" class="info-section">
+      <div class="container">
+        <h2>Contattaci</h2>
+
+        <form id="contact-form" novalidate>
+
+          <div class="form-group">
+            <label for="name">Nome</label>
+            <input type="text" id="name" name="name">
+            <small class="error-message" id="name-error"></small>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email">
+            <small class="error-message" id="email-error"></small>
+          </div>
+
+          <div class="form-group">
+            <label for="message">Messaggio</label>
+            <textarea id="message" name="message" rows="5"></textarea>
+            <small class="error-message" id="message-error"></small>
+          </div>
+
+          <button type="submit" class="btn-primary">
+            Invia messaggio
+          </button>
+
+        </form>
+      </div>
+    </section>
+
     <!-- TERMINI -->
     <section id="termini" class="info-section">
       <div class="container">
         <h2>Termini e Condizioni</h2>
         <p>
-          Plugin House è un progetto scolastico dimostrativo. Tutti i marchi,
-          i prodotti e i prezzi mostrati sono a scopo educativo e illustrativo.
+          Plugin House è un progetto scolastico dimostrativo.
           Nessun acquisto reale viene effettuato tramite questa piattaforma.
         </p>
       </div>
@@ -124,9 +160,8 @@
       <div class="container">
         <h2>Privacy Policy</h2>
         <p>
-          Questo sito utilizza esclusivamente localStorage per salvare preferiti,
-          tema e carrello sul dispositivo dell’utente. Nessun dato personale
-          viene raccolto o condiviso con terze parti.
+          Questo sito utilizza localStorage per salvare preferiti,
+          tema e carrello. Nessun dato personale viene condiviso.
         </p>
       </div>
     </section>
@@ -145,7 +180,7 @@
     </div>
   </footer>
 
-  <!-- MODALE DETTAGLI -->
+  <!-- MODALE -->
   <div id="plugin-modal" class="modal hidden" aria-hidden="true">
     <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modal-title">
 
