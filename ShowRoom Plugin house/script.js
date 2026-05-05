@@ -11,6 +11,76 @@ document.addEventListener("DOMContentLoaded", () => {
   const clearCartBtn = document.getElementById("clear-cart");
   const checkoutBtn = document.getElementById("checkout-btn");
 
+  // ---- TOAST ----
+  const toast = document.getElementById("toast");
+
+  function showToast(message) {
+    if (!toast) return;
+
+    toast.textContent = message;
+    toast.classList.remove("hidden");
+
+    clearTimeout(showToast.timeout);
+
+    showToast.timeout = setTimeout(() => {
+      toast.classList.add("hidden");
+    }, 2200);
+  }
+
+  // ---- FORM ----
+  const contactForm = document.getElementById("contact-form");
+  const nameInput = document.getElementById("name");
+  const emailInput = document.getElementById("email");
+  const messageInput = document.getElementById("message");
+
+  const nameError = document.getElementById("name-error");
+  const emailError = document.getElementById("email-error");
+  const messageError = document.getElementById("message-error");
+
+  function validateEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  if (contactForm) {
+    contactForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      let valid = true;
+
+      // Reset errori
+      nameError.textContent = "";
+      emailError.textContent = "";
+      messageError.textContent = "";
+
+      const nameValue = nameInput.value.trim();
+      const emailValue = emailInput.value.trim();
+      const messageValue = messageInput.value.trim();
+
+      if (!nameValue) {
+        nameError.textContent = "Inserisci il tuo nome";
+        valid = false;
+      }
+
+      if (!emailValue) {
+        emailError.textContent = "Inserisci la tua email";
+        valid = false;
+      } else if (!validateEmail(emailValue)) {
+        emailError.textContent = "Email non valida";
+        valid = false;
+      }
+
+      if (!messageValue) {
+        messageError.textContent = "Inserisci un messaggio";
+        valid = false;
+      }
+
+      if (!valid) return;
+
+      contactForm.reset();
+      showToast("Messaggio inviato con successo");
+    });
+  }
+
   // ---- MODALE ----
   const modal = document.getElementById("plugin-modal");
   const closeModalBtn = document.getElementById("close-modal");
@@ -47,8 +117,10 @@ document.addEventListener("DOMContentLoaded", () => {
   function toggleFavorite(id) {
     if (isFavorite(id)) {
       favoritesIds = favoritesIds.filter((x) => x !== id);
+      showToast("Rimosso dai preferiti");
     } else {
       favoritesIds.push(id);
+      showToast("Aggiunto ai preferiti");
     }
 
     localStorage.setItem(FAVORITES_KEY, JSON.stringify(favoritesIds));
@@ -65,13 +137,17 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!isInCart(id)) {
       cartIds.push(id);
       localStorage.setItem(CART_KEY, JSON.stringify(cartIds));
+      showToast("Aggiunto al carrello");
       renderAll();
+    } else {
+      showToast("Già presente nel carrello");
     }
   }
 
   function clearCart() {
     cartIds = [];
     localStorage.setItem(CART_KEY, JSON.stringify(cartIds));
+    showToast("Carrello svuotato");
     renderAll();
   }
 
@@ -207,6 +283,12 @@ document.addEventListener("DOMContentLoaded", () => {
   // ---- RENDER ----
   function renderProductsGrid(list) {
     productsGrid.innerHTML = "";
+
+    if (list.length === 0) {
+      productsGrid.innerHTML = "<p>Nessun risultato</p>";
+      return;
+    }
+
     list.forEach((p) => productsGrid.appendChild(createProductCard(p)));
   }
 
@@ -257,7 +339,7 @@ document.addEventListener("DOMContentLoaded", () => {
   clearCartBtn.addEventListener("click", clearCart);
 
   checkoutBtn.addEventListener("click", () => {
-    alert("Acquisto completato con successo (demo)");
+    showToast("Acquisto completato con successo");
     clearCart();
   });
 
