@@ -724,3 +724,114 @@ nav{ position: relative; }
     font-size: 34px;
   }
 }
+/* =========================
+   TOAST + FORM VALIDAZIONE
+   AGGIUNGI IN FONDO AL TUO CSS
+========================= */
+
+/* TOAST */
+.toast {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  padding: 14px 18px;
+  border-radius: 16px;
+  background: color-mix(in oklab, var(--surface-2) 92%, transparent);
+  border: 1px solid var(--border);
+  color: var(--text);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(14px);
+  z-index: 10000;
+  font-size: 14px;
+  font-weight: 600;
+  animation: toastSlide 0.25s ease;
+}
+
+.toast.hidden {
+  display: none;
+}
+
+@keyframes toastSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-12px) translateX(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) translateX(0);
+  }
+}
+
+/* FORM */
+#contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 14px 14px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: color-mix(in oklab, var(--surface-2) 82%, transparent);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 14px;
+  resize: vertical;
+  transition: var(--transition);
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: color-mix(in oklab, var(--accent-2) 65%, var(--border));
+}
+
+.error-message {
+  min-height: 18px;
+  font-size: 13px;
+  color: #ff4d6d;
+}
+
+/* Stato errore input */
+.form-group input.error,
+.form-group textarea.error {
+  border-color: #ff4d6d;
+}
+
+/* Responsive */
+@media (min-width: 768px) {
+  #contact-form {
+    gap: 22px;
+  }
+
+  .toast {
+    top: 30px;
+    right: 30px;
+  }
+}
+
+@media (max-width: 767px) {
+  .toast {
+    top: 16px;
+    right: 16px;
+    left: 16px;
+    text-align: center;
+  }
+}
