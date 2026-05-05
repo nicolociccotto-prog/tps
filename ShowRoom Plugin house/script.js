@@ -1,9 +1,15 @@
 document.addEventListener("DOMContentLoaded", () => {
   const productsGrid = document.getElementById("products-grid");
   const favoritesGrid = document.getElementById("favorites-grid");
+  const cartGrid = document.getElementById("cart-grid");
+
   const searchInput = document.getElementById("search");
   const sortSelect = document.getElementById("sort");
   const darkToggle = document.getElementById("dark-toggle");
+
+  const cartTotal = document.getElementById("cart-total");
+  const clearCartBtn = document.getElementById("clear-cart");
+  const checkoutBtn = document.getElementById("checkout-btn");
 
   // ---- MODALE ----
   const modal = document.getElementById("plugin-modal");
@@ -15,12 +21,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const modalCategory = document.getElementById("modal-category");
   const modalDescription = document.getElementById("modal-description");
 
-  if (!productsGrid || !favoritesGrid || !searchInput || !sortSelect) {
-    console.error("Manca qualche id in HTML: products-grid / favorites-grid / search / sort");
+  if (!productsGrid || !favoritesGrid || !cartGrid) {
+    console.error("Elementi HTML mancanti");
     return;
   }
 
-  // ---- Dark mode persistente ----
+  // ---- DARK MODE ----
   if (localStorage.getItem("darkMode") === "true") {
     document.body.classList.add("dark");
   }
@@ -28,120 +34,105 @@ document.addEventListener("DOMContentLoaded", () => {
   if (darkToggle) {
     darkToggle.addEventListener("click", () => {
       document.body.classList.toggle("dark");
-      localStorage.setItem(
-        "darkMode",
-        document.body.classList.contains("dark")
-      );
+      localStorage.setItem("darkMode", document.body.classList.contains("dark"));
     });
   }
 
-  // ---- Favoriti ----
+  // ---- FAVORITI ----
   const FAVORITES_KEY = "favorites";
-  let favoritesIds = [];
-
-  try {
-    const saved = JSON.parse(localStorage.getItem(FAVORITES_KEY));
-    favoritesIds = Array.isArray(saved) ? saved : [];
-  } catch {
-    favoritesIds = [];
-  }
+  let favoritesIds = JSON.parse(localStorage.getItem(FAVORITES_KEY)) || [];
 
   const isFavorite = (id) => favoritesIds.includes(id);
 
-  const saveFavorites = () => {
-    localStorage.setItem(FAVORITES_KEY, JSON.stringify(favoritesIds));
-  };
-
-  const toggleFavorite = (id) => {
+  function toggleFavorite(id) {
     if (isFavorite(id)) {
       favoritesIds = favoritesIds.filter((x) => x !== id);
     } else {
       favoritesIds.push(id);
     }
 
-    saveFavorites();
+    localStorage.setItem(FAVORITES_KEY, JSON.stringify(favoritesIds));
     renderAll();
-  };
+  }
 
-  // ---- Prodotti ----
+  // ---- CARRELLO ----
+  const CART_KEY = "cart";
+  let cartIds = JSON.parse(localStorage.getItem(CART_KEY)) || [];
+
+  const isInCart = (id) => cartIds.includes(id);
+
+  function toggleCart(id) {
+    if (!isInCart(id)) {
+      cartIds.push(id);
+      localStorage.setItem(CART_KEY, JSON.stringify(cartIds));
+      renderAll();
+    }
+  }
+
+  function clearCart() {
+    cartIds = [];
+    localStorage.setItem(CART_KEY, JSON.stringify(cartIds));
+    renderAll();
+  }
+
+  // ---- DATI ----
   let products = [];
 
-  // ---- Descrizioni per modale ----
   const descriptions = {
-    "Zenology": "Synth moderno ispirato all’eredità Roland, perfetto per elettronica, trap e pop",
-    "Serum": "Wavetable synth tra i più usati al mondo, ideale per bassi, lead e sound design avanzato",
-    "Xpand!2": "Plugin versatile con moltissimi preset pronti all’uso e workflow veloce",
-    "Analog Lab V": "Raccolta premium di synth vintage e moderni con libreria enorme",
-    "Nexus": "Rompler iconico per preset commerciali, trap, dance e produzioni radio-ready",
-    "FabFilter Pro Q4": "Equalizzatore professionale preciso e intuitivo per mix e mastering",
-    "Portal": "Effetto granulare creativo per trasformare qualsiasi suono",
-    "Thermal": "Distorsore avanzato per saturazione aggressiva e sound design",
-    "Evermotion": "Libreria cinematica con texture emotive e ambienti sonori",
-    "Triton": "Workstation storica con timbri classici ancora amatissimi"
+    "Zenology": "Synth moderno ispirato all’eredità Roland",
+    "Serum": "Wavetable synth iconico per sound design",
+    "Xpand!2": "Preset rapidi e workflow immediato",
+    "Analog Lab V": "Collezione premium di synth",
+    "Nexus": "Preset commerciali radio-ready",
+    "FabFilter Pro Q4": "EQ professionale",
+    "Portal": "Effetto granulare creativo",
+    "Thermal": "Distorsore avanzato",
+    "Evermotion": "Texture cinematiche",
+    "Triton": "Suoni workstation classici"
   };
 
   async function loadProducts() {
     try {
       const res = await fetch("products.json", { cache: "no-store" });
 
-      if (!res.ok) {
-        throw new Error(`Fetch products.json fallito: ${res.status}`);
-      }
+      if (!res.ok) throw new Error("Errore fetch");
 
       const data = await res.json();
 
-      if (!Array.isArray(data)) {
-        throw new Error("products.json non è un array");
-      }
+      if (!Array.isArray(data)) throw new Error("JSON non valido");
 
-      products = data
-        .filter((p) => p && typeof p === "object")
-        .map((p) => ({
-          id: Number(p.id),
-          name: String(p.name ?? ""),
-          brand: String(p.brand ?? ""),
-          category: String(p.category ?? ""),
-          price: Number(p.price ?? 0),
-          image: String(p.image ?? "")
-        }))
-        .filter((p) => Number.isFinite(p.id) && p.name.length > 0);
+      products = data.map((p) => ({
+        id: Number(p.id),
+        name: String(p.name),
+        brand: String(p.brand),
+        category: String(p.category),
+        price: Number(p.price),
+        image: String(p.image)
+      }));
 
       renderAll();
 
     } catch (err) {
       console.error(err);
-      productsGrid.textContent = "Errore nel caricamento dei prodotti";
+      productsGrid.textContent = "Errore caricamento prodotti";
     }
   }
 
-  // ---- Ricerca + sort ----
+  // ---- FILTRI ----
   function getFilteredSortedProducts() {
     const q = searchInput.value.trim().toLowerCase();
-    let list = products;
 
-    if (q.length > 0) {
-      list = list.filter((p) => {
-        const haystack = `${p.name} ${p.brand} ${p.category}`.toLowerCase();
-        return haystack.includes(q);
-      });
-    }
+    let list = products.filter((p) => {
+      return `${p.name} ${p.brand} ${p.category}`.toLowerCase().includes(q);
+    });
 
     const sort = sortSelect.value;
-    const copy = [...list];
 
-    if (sort === "price-asc") {
-      copy.sort((a, b) => a.price - b.price);
-    }
+    if (sort === "price-asc") list.sort((a, b) => a.price - b.price);
+    if (sort === "price-desc") list.sort((a, b) => b.price - a.price);
+    if (sort === "name") list.sort((a, b) => a.name.localeCompare(b.name));
 
-    if (sort === "price-desc") {
-      copy.sort((a, b) => b.price - a.price);
-    }
-
-    if (sort === "name") {
-      copy.sort((a, b) => a.name.localeCompare(b.name));
-    }
-
-    return copy;
+    return list;
   }
 
   // ---- MODALE ----
@@ -153,111 +144,70 @@ document.addEventListener("DOMContentLoaded", () => {
     modalBrand.textContent = `Brand: ${product.brand}`;
     modalPrice.textContent = `Prezzo: € ${product.price}`;
     modalCategory.textContent = `Categoria: ${product.category}`;
-
     modalDescription.textContent =
       descriptions[product.name] ||
-      "Plugin professionale progettato per migliorare workflow creativo e qualità sonora";
+      "Plugin professionale per produzione musicale";
 
     modal.classList.remove("hidden");
-    modal.setAttribute("aria-hidden", "false");
   }
 
   function closeModal() {
     modal.classList.add("hidden");
-    modal.setAttribute("aria-hidden", "true");
   }
 
-  if (closeModalBtn) {
-    closeModalBtn.addEventListener("click", closeModal);
-  }
+  closeModalBtn.addEventListener("click", closeModal);
 
-  if (modal) {
-    modal.addEventListener("click", (event) => {
-      if (event.target === modal) {
-        closeModal();
-      }
-    });
-  }
-
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && modal && !modal.classList.contains("hidden")) {
-      closeModal();
-    }
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) closeModal();
   });
 
-  // ---- Card ----
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeModal();
+  });
+
+  // ---- CARD ----
   function createProductCard(product) {
     const card = document.createElement("article");
     card.className = "product-card";
 
-    const img = document.createElement("img");
-    img.src = product.image;
-    img.alt = product.name;
+    card.innerHTML = `
+      <img src="${product.image}" alt="${product.name}">
+      <h3>${product.name}</h3>
+      <p>${product.brand}</p>
+      <p>€ ${product.price}</p>
+    `;
 
-    const title = document.createElement("h3");
-    title.textContent = product.name;
-
-    const brand = document.createElement("p");
-    brand.textContent = product.brand;
-
-    const price = document.createElement("p");
-    price.textContent = `€ ${product.price}`;
-
-    // ---- Dettagli ----
     const detailsBtn = document.createElement("button");
-    detailsBtn.type = "button";
     detailsBtn.className = "details-btn";
     detailsBtn.textContent = "Dettagli";
+    detailsBtn.addEventListener("click", () => openModal(product));
 
-    detailsBtn.addEventListener("click", () => {
-      openModal(product);
-    });
-
-    // ---- Preferiti ----
     const favBtn = document.createElement("button");
-    favBtn.type = "button";
     favBtn.className = "fav-btn";
+    favBtn.textContent = isFavorite(product.id) ? "♥" : "♡";
 
-    const favOn = isFavorite(product.id);
-
-    favBtn.textContent = favOn ? "♥" : "♡";
-
-    if (favOn) {
+    if (isFavorite(product.id)) {
       favBtn.classList.add("is-fav");
     }
 
-    favBtn.setAttribute(
-      "aria-label",
-      favOn ? "Rimuovi dai preferiti" : "Aggiungi ai preferiti"
-    );
+    favBtn.addEventListener("click", () => toggleFavorite(product.id));
 
-    favBtn.addEventListener("click", () => {
-      toggleFavorite(product.id);
-    });
+    const cartBtn = document.createElement("button");
+    cartBtn.className = "cart-btn";
+    cartBtn.textContent = "🛒";
+    cartBtn.addEventListener("click", () => toggleCart(product.id));
 
-    card.appendChild(img);
-    card.appendChild(title);
-    card.appendChild(brand);
-    card.appendChild(price);
     card.appendChild(detailsBtn);
     card.appendChild(favBtn);
+    card.appendChild(cartBtn);
 
     return card;
   }
 
+  // ---- RENDER ----
   function renderProductsGrid(list) {
     productsGrid.innerHTML = "";
-
-    if (list.length === 0) {
-      const msg = document.createElement("p");
-      msg.textContent = "Nessun risultato";
-      productsGrid.appendChild(msg);
-      return;
-    }
-
-    list.forEach((product) => {
-      productsGrid.appendChild(createProductCard(product));
-    });
+    list.forEach((p) => productsGrid.appendChild(createProductCard(p)));
   }
 
   function renderFavoritesGrid() {
@@ -266,26 +216,51 @@ document.addEventListener("DOMContentLoaded", () => {
     const favProducts = products.filter((p) => isFavorite(p.id));
 
     if (favProducts.length === 0) {
-      const msg = document.createElement("p");
-      msg.textContent = "Nessun plugin nei preferiti";
-      favoritesGrid.appendChild(msg);
+      favoritesGrid.innerHTML = "<p>Nessun plugin nei preferiti</p>";
       return;
     }
 
-    favProducts.forEach((product) => {
-      favoritesGrid.appendChild(createProductCard(product));
+    favProducts.forEach((p) => favoritesGrid.appendChild(createProductCard(p)));
+  }
+
+  function renderCart() {
+    cartGrid.innerHTML = "";
+
+    const cartProducts = products.filter((p) => cartIds.includes(p.id));
+
+    if (cartProducts.length === 0) {
+      cartGrid.innerHTML = "<p>Il carrello è vuoto</p>";
+      cartTotal.textContent = "Totale: € 0";
+      return;
+    }
+
+    let total = 0;
+
+    cartProducts.forEach((p) => {
+      total += p.price;
+      cartGrid.appendChild(createProductCard(p));
     });
+
+    cartTotal.textContent = `Totale: € ${total}`;
   }
 
   function renderAll() {
     renderProductsGrid(getFilteredSortedProducts());
     renderFavoritesGrid();
+    renderCart();
   }
 
-  // ---- Eventi ----
+  // ---- EVENTI ----
   searchInput.addEventListener("input", renderAll);
   sortSelect.addEventListener("change", renderAll);
 
-  // ---- Start ----
+  clearCartBtn.addEventListener("click", clearCart);
+
+  checkoutBtn.addEventListener("click", () => {
+    alert("Acquisto completato con successo (demo)");
+    clearCart();
+  });
+
+  // ---- START ----
   loadProducts();
 });
