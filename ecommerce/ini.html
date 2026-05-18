@@ -1,46 +1,61 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Configurazione</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurazione</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Configurazione Piattaforma</h1>
+    <header>
+        <h1>Configurazione Piattaforma</h1>
+        <nav>
+            <a href="index.html">Catalogo</a>
+        </nav>
+    </header>
 
-  <label>Carica file CSV:</label>
-  <input type="file" id="csvFile" accept=".csv">
+    <main class="config-container">
+        <div class="config-box">
+            <label>Carica file CSV</label>
+            <input type="file" id="csvFile" accept=".csv">
 
-  <label>Carica CSS personalizzato (opzionale):</label>
-  <input type="file" id="cssFile" accept=".css">
+            <label>Carica CSS personalizzato (opzionale)</label>
+            <input type="file" id="cssFile" accept=".css">
 
-  <button onclick="salvaConfigurazione()">Salva Configurazione</button>
+            <button onclick="salvaConfigurazione()">Salva Configurazione</button>
+        </div>
+    </main>
 
-  <script>
-    function salvaConfigurazione() {
-      const csv = document.getElementById("csvFile").files[0]
+    <script>
+        function salvaConfigurazione() {
+            const csv = document.getElementById("csvFile").files[0]
+            const css = document.getElementById("cssFile").files[0]
 
-      if (csv) {
-        const reader = new FileReader()
-        reader.onload = function(e) {
-          localStorage.setItem("csvData", e.target.result)
-          alert("CSV caricato correttamente")
+            if (csv) {
+                const reader = new FileReader()
+                reader.onload = function(e) {
+                    localStorage.setItem("csvData", e.target.result)
+                    alert("CSV caricato correttamente")
+                }
+                reader.readAsText(csv)
+            }
+
+            if (css) {
+                const cssReader = new FileReader()
+                cssReader.onload = function(e) {
+                    localStorage.setItem("customCSS", e.target.result)
+                    alert("CSS personalizzato salvato")
+                }
+                cssReader.readAsText(css)
+            }
         }
-        reader.readAsText(csv)
-      }
 
-      const css = document.getElementById("cssFile").files[0]
-
-      if (css) {
-        const cssReader = new FileReader()
-        cssReader.onload = function(e) {
-          localStorage.setItem("customCSS", e.target.result)
-          alert("CSS personalizzato salvato")
+        const customCSS = localStorage.getItem("customCSS")
+        if (customCSS) {
+            const style = document.createElement("style")
+            style.innerHTML = customCSS
+            document.head.appendChild(style)
         }
-        cssReader.readAsText(css)
-      }
-    }
-  </script>
+    </script>
 </body>
 </html>
