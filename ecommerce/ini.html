@@ -1,14 +1,46 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configurazione</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Configurazione</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Pagina Configurazione</h1>
-    <p>Per cambiare i prodotti modifica il file prodotti.csv</p>
-    <a href="index.html">Torna al catalogo</a>
+  <h1>Configurazione Piattaforma</h1>
+
+  <label>Carica file CSV:</label>
+  <input type="file" id="csvFile" accept=".csv">
+
+  <label>Carica CSS personalizzato (opzionale):</label>
+  <input type="file" id="cssFile" accept=".css">
+
+  <button onclick="salvaConfigurazione()">Salva Configurazione</button>
+
+  <script>
+    function salvaConfigurazione() {
+      const csv = document.getElementById("csvFile").files[0]
+
+      if (csv) {
+        const reader = new FileReader()
+        reader.onload = function(e) {
+          localStorage.setItem("csvData", e.target.result)
+          alert("CSV caricato correttamente")
+        }
+        reader.readAsText(csv)
+      }
+
+      const css = document.getElementById("cssFile").files[0]
+
+      if (css) {
+        const cssReader = new FileReader()
+        cssReader.onload = function(e) {
+          localStorage.setItem("customCSS", e.target.result)
+          alert("CSS personalizzato salvato")
+        }
+        cssReader.readAsText(css)
+      }
+    }
+  </script>
 </body>
 </html>
