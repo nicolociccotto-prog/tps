@@ -13,7 +13,6 @@ body {
     min-height: 100vh;
 }
 
-/* HEADER */
 header {
     display: flex;
     justify-content: space-between;
@@ -21,181 +20,90 @@ header {
     padding: 20px 40px;
     background: rgba(255,255,255,0.05);
     backdrop-filter: blur(15px);
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-}
-
-header h1 {
-    font-size: 2rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-    color: #ffffff;
 }
 
 nav a {
     color: white;
     text-decoration: none;
-    margin-left: 25px;
-    font-weight: 500;
-    transition: 0.3s ease;
-    position: relative;
+    margin-left: 20px;
 }
 
-nav a:hover {
-    color: #00ffd5;
-}
-
-nav a::after {
-    content: "";
-    position: absolute;
-    width: 0%;
-    height: 2px;
-    background: #00ffd5;
-    left: 0;
-    bottom: -5px;
-    transition: 0.3s;
-}
-
-nav a:hover::after {
-    width: 100%;
-}
-
-/* PRODUCT GRID */
 #products-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 35px;
-    padding: 50px;
+    gap: 30px;
+    padding: 40px;
 }
 
-/* CARD */
 .product-card {
     background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 22px;
+    border-radius: 20px;
     overflow: hidden;
-    backdrop-filter: blur(12px);
-    transition: transform 0.35s ease, box-shadow 0.35s ease;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-}
-
-.product-card:hover {
-    transform: translateY(-12px) scale(1.02);
-    box-shadow: 0 20px 40px rgba(0,255,213,0.15);
+    padding-bottom: 20px;
+    text-align: center;
 }
 
 .product-card img {
     width: 100%;
-    height: 260px;
+    height: 250px;
     object-fit: cover;
-    transition: 0.4s ease;
 }
 
-.product-card:hover img {
-    transform: scale(1.05);
-}
-
-.product-card h2 {
-    font-size: 1.3rem;
-    margin: 18px 20px 10px;
-    font-weight: 600;
-}
-
-.product-card p {
-    margin: 0 20px 15px;
-    color: #d0d0d0;
-    font-size: 0.95rem;
-}
-
-/* PRICE */
+.product-card h2,
+.product-card p,
 .product-card .price {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: #00ffd5;
-    margin: 0 20px 20px;
+    margin: 15px;
 }
 
-/* BUTTONS */
-.product-card a,
-button {
+button, .product-card a {
     display: inline-block;
-    margin: 10px 20px 20px;
-    padding: 12px 20px;
-    border-radius: 12px;
-    border: none;
+    padding: 12px 18px;
+    margin: 10px;
+    border-radius: 10px;
     text-decoration: none;
-    font-weight: 600;
+    border: none;
     cursor: pointer;
-    transition: 0.3s ease;
 }
 
-.product-card a {
-    background: transparent;
-    border: 1px solid #00ffd5;
-    color: #00ffd5;
-}
-
-.product-card a:hover {
+button {
     background: #00ffd5;
     color: black;
 }
 
-button {
-    background: linear-gradient(135deg, #00ffd5, #00bfa6);
-    color: black;
+.product-card a {
+    border: 1px solid #00ffd5;
+    color: #00ffd5;
 }
 
-button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 20px rgba(0,255,213,0.25);
+#product-detail {
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 20px;
 }
 
-/* CART */
 #cart-items {
     padding: 40px;
-    max-width: 900px;
-    margin: auto;
 }
 
 .cart-item {
-    background: rgba(255,255,255,0.06);
-    padding: 20px;
+    background: rgba(255,255,255,0.08);
     margin-bottom: 20px;
-    border-radius: 18px;
+    padding: 20px;
+    border-radius: 15px;
+}
+
+.config-container {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    justify-content: center;
+    padding: 60px;
 }
 
-/* CONFIG PAGE */
-body h1 {
-    text-align: center;
-    margin-top: 40px;
-    font-size: 2.2rem;
-}
-
-body p, body a {
-    display: block;
-    text-align: center;
-    margin-top: 20px;
-    color: #d0d0d0;
-    text-decoration: none;
-}
-
-/* MOBILE */
-@media (max-width: 768px) {
-    header {
-        flex-direction: column;
-        gap: 15px;
-    }
-
-    #products-container {
-        padding: 25px;
-    }
-
-    .product-card img {
-        height: 220px;
-    }
+.config-box {
+    background: rgba(255,255,255,0.08);
+    padding: 30px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 400px;
 }
