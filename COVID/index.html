@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tabella Covid Automatici</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <h2>Dati Covid</h2>
+    <table id="miaTabella"></table>
+
+    <script>
+        var richiesta = new XMLHttpRequest();
+        richiesta.open("GET", "covid.json", false);
+        richiesta.send();
+
+        var dati = JSON.parse(richiesta.responseText);
+
+        var tabella = document.getElementById("miaTabella");
+
+        var chiavi = Object.keys(dati[0]);
+
+        var rigaHeader = document.createElement("tr");
+        for (var k = 0; k < chiavi.length; k = k + 1) {
+            var th = document.createElement("th");
+            th.innerHTML = chiavi[k];
+            rigaHeader.appendChild(th);
+        }
+        tabella.appendChild(rigaHeader);
+
+        for (var i = 0; i < dati.length; i = i + 1) {
+            var riga = document.createElement("tr");
+
+            for (var j = 0; j < chiavi.length; j = j + 1) {
+                var td = document.createElement("td");
+                var nomeColonna = chiavi[j];
+                td.innerHTML = dati[i][nomeColonna];
+                riga.appendChild(td);
+            }
+
+            tabella.appendChild(riga);
+        }
+    </script>
+
+</body>
+</html>
