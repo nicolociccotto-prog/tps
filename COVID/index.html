@@ -11,7 +11,7 @@
 
     <script>
         var richiesta = new XMLHttpRequest();
-        richiesta.open("GET", "covid.json", false);
+        richiesta.open("GET", "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-json/dpc-covid19-ita-andamento-nazionale.json", false);
         richiesta.send();
 
         var dati = JSON.parse(richiesta.responseText);
